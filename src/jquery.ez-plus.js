@@ -34,6 +34,10 @@ if (typeof Object.create !== 'function') {
 
             self.imageSrc = self.$elem.attr('data-'+self.options.attrImageZoomSrc) ? self.$elem.attr('data-'+self.options.attrImageZoomSrc) : self.$elem.attr('src');
 
+            //Read (optional) metadata from an attribute called data-image-metadata
+            self.metaData = self.$elem.attr("data-image-metadata") ? self.$elem.attr("data-image-metadata") : "";
+            self.metaData = self.metaData.replace(/\n/g, "<br />"); //convert line breaks to <br />
+
             if (!self.options.enabled) {
                 return;
             }
@@ -906,6 +910,22 @@ if (typeof Object.create !== 'function') {
                         }
                     }
                     self.isLensActive = true;
+
+                    //if we have metadata, add it to the zoom window
+                    if(self.metaData != "") {
+                        let metaDataStyle = `position: absolute;
+                        width: 100%;
+                        bottom: 0;
+                        left: 0;
+                        background: rgba(255, 255, 255, 0.8);
+                        color: #000;
+                        padding: 1em;
+                        font-size: 1em;
+                        letter-spacing: 1px;
+                        `;
+                        $(".zoomWindowMetaData").remove();
+                        $(".zoomWindow").append("<div class='zoomWindowMetaData' style='"+metaDataStyle+"'>"+self.metaData+"</div>");
+                    }
                 }
             }
             if (change === 'hide') {
